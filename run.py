@@ -79,7 +79,7 @@ class CheckerWorker(QThread):
 
             with self._start_lock:
                 self._start_counter += 1
-                start_delay = (self._start_counter - 1) * 5
+                start_delay = (self._start_counter - 1) * 3
             if start_delay > 0:
                 time.sleep(start_delay)
 
@@ -114,7 +114,7 @@ class CheckerWorker(QThread):
                         sb.activate_cdp_mode(URL)
                         sb.sleep(5)
 
-                        sb.type('input[name="accountIdentifier"]', account["email"], timeout=20)
+                        sb.type('input[name="accountIdentifier"]', account["email"], timeout=30)
                         sb.click('button[type="submit"]')
 
                         if not sb.wait_for_element('input[name="password"]', timeout=10):
