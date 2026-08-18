@@ -1,0 +1,7 @@
+.env
+downloaded_files
+__pycache__
+accounts.txt
+main.py
+extras
+runs
