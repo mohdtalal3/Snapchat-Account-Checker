@@ -53,6 +53,8 @@ class CheckerWorker(QThread):
         self._stop = False
         self._lock = threading.Lock()
         self._counter = 0
+        self._start_lock = threading.Lock()
+        self._start_counter = 0
 
     def stop(self):
         self._stop = True
@@ -74,6 +76,15 @@ class CheckerWorker(QThread):
                 return
             row_idx = account_info["row"]
             account = account_info["data"]
+
+            with self._start_lock:
+                self._start_counter += 1
+                start_delay = (self._start_counter - 1) * 5
+            if start_delay > 0:
+                time.sleep(start_delay)
+
+            if self._stop:
+                return
 
             with self._lock:
                 self._counter += 1
@@ -105,9 +116,8 @@ class CheckerWorker(QThread):
 
                         sb.type('input[name="accountIdentifier"]', account["email"], timeout=20)
                         sb.click('button[type="submit"]')
-                        sb.sleep(4)
 
-                        if not sb.is_element_visible('input[name="password"]', timeout=5):
+                        if not sb.wait_for_element('input[name="password"]', timeout=10):
                             status = "NON-HIT"
                             detail = "email not valid (no password page)"
                             self.log_signal.emit(
