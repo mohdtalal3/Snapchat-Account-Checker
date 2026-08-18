@@ -133,7 +133,7 @@ class CheckerWorker(QThread):
 
                         current_url = sb.get_current_url()
 
-                        if "otp" in current_url or "/v2/welcome" in current_url:
+                        if "otp" in current_url :
                             status = "HIT"
                             detail = "logged in"
                             self.log_signal.emit(
