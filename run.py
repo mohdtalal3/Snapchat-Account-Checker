@@ -116,8 +116,12 @@ class CheckerWorker(QThread):
 
                         sb.type('input[name="accountIdentifier"]', account["email"], timeout=30)
                         sb.click('button[type="submit"]')
-
-                        if not sb.wait_for_element('input[name="password"]', timeout=10):
+                        
+                        try:
+                            sb.type('input[name="password"]', account["password"], timeout=10)
+                            sb.click('button[data-testid="password-submit-button"]')
+                            sb.sleep(4)
+                        except Exception:
                             status = "NON-HIT"
                             detail = "email not valid (no password page)"
                             self.log_signal.emit(
@@ -126,10 +130,6 @@ class CheckerWorker(QThread):
                             self.logger.info(f"[NON-HIT] {account['email']} - {detail}")
                             append_csv(non_hits_path, account["email"], account["password"])
                             break
-
-                        sb.type('input[name="password"]', account["password"], timeout=5)
-                        sb.click('button[data-testid="password-submit-button"]')
-                        sb.sleep(4)
 
                         current_url = sb.get_current_url()
 
