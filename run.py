@@ -79,7 +79,7 @@ class CheckerWorker(QThread):
 
             with self._start_lock:
                 self._start_counter += 1
-                start_delay = (self._start_counter - 1) * 3
+                start_delay = (self._start_counter - 1) * 2
             if start_delay > 0:
                 time.sleep(start_delay)
 
@@ -133,7 +133,7 @@ class CheckerWorker(QThread):
 
                         current_url = sb.get_current_url()
 
-                        if "accounts/v2" in current_url or "otp" in current_url or "welcome" in current_url:
+                        if "otp" in current_url or "welcome" in current_url:
                             status = "HIT"
                             detail = "logged in"
                             self.log_signal.emit(
